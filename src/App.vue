@@ -3,11 +3,10 @@
     <div class="banner-background">
     </div>
     <el-row type="flex" justify="center">
-      <el-col span="16" style="margin-top: 10%">
-        <NFA/>
+      <el-col span="16" style="margin-top: 5%">
+        <Regex2NFA/>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
@@ -21,11 +20,11 @@
 </style>
 
 <script>
-import NFA from "@/components/NFA_Graph"
+import Regex2NFA from "@/components/Regex2NFA"
 
 export default {
   name: 'App',
-  components: {NFA}
+  components: {Regex2NFA}
 }
 </script>
 

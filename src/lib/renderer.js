@@ -67,7 +67,7 @@
         label: isEpsilon ? 'ϵ' : input,
         arrows: 'to',
         color: {color: 'gray'},
-        font: isEpsilon ? {align: 'horizontal'} : {align: 'horizontal', color: 'rgb(255,0,0)'}
+        font: isEpsilon ? {align: 'horizontal', size: 28} : {align: 'horizontal', size: 28, color: 'rgb(255,0,0)'}
       })
     }
   

@@ -22,7 +22,8 @@
     "vis-data": "^7.1.2",
     "vis-network": "^9.0.4",
     "vis-util": "^5.0.2",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vuetify": "^2.4.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

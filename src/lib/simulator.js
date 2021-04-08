@@ -49,21 +49,26 @@
       running = true
       ;(withBacktrack ? run_simulator_backtrack : run_simulator)(currentNfa, el_text.value, (state, next) => {
         if (!next) {
-          updateState(state)
+          updateState(state, false)
           stop()
           return
         }
-        updateState(state)
+        updateState(state, true)
         nextStep = next
       })
     }
   }
 
-  function updateState(state) {
+  function updateState(state, hasNext) {
     if (state.states.size === 0) return
     const nodes = Array.from(state.states).map((s) => s.id)
     network.setSelection({nodes}, {highlightEdges: false})
-    el_result.innerHTML = `step: <b>${state.step}</b><br>next char: <b>${state.char || ''}</b><br>result: <b>${state.result}</b>`
+    if(hasNext){
+      el_result.innerHTML = `步数：<b>${state.step}</b><br>下一步：<b>${state.char || ''}</b><br>`
+    }else {
+      el_result.innerHTML = `步数：<b>${state.step}</b><br>匹配结果：<b>${state.result}</b>`
+    }
+
   }
 
   function stop() {
