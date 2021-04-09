@@ -37,6 +37,9 @@
     const nfa = currentNfa = NFA.createFromRegexp(regexp)
     const data = render_nfa_to_network_data(nfa)
     network.setData(data)
+    let blob = new Blob([JSON.stringify(data)], {type: "application/octet-stream"})
+    regexData.blobLink = URL.createObjectURL(blob)
+    regexData.blobName = Date.now() + '.nfa'
   }
 
   function run() {

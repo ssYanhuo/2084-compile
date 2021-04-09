@@ -23,9 +23,7 @@
         <p>过程演示:</p>
         <div>
           <el-checkbox id="checkbox-physics" v-model="physicsEnabled" style="margin: 16px 8px">自动布局</el-checkbox>
-          <el-tooltip content="保存数据到本地" placement="top">
-            <el-button style="margin: 0 8px" type="primary" icon="el-icon-download" circle size="small" @click="saveData"/>
-          </el-tooltip>
+          <el-link style="margin: 0 8px" type="primary" icon="el-icon-download" :href="blobLink" :download="blobName">保存数据到本地</el-link>
         </div>
       </el-row>
       <el-card shadow="never">
@@ -47,12 +45,9 @@ export default {
       isBackTrack: false,
       buttonsDisabled: false,
       btnText: "执行匹配",
-      physicsEnabled: true
-    }
-  },
-  methods: {
-    saveData(){
-
+      physicsEnabled: true,
+      blobLink: null,
+      blobName: Date.now() + '.nfa'
     }
   },
   mounted() {
