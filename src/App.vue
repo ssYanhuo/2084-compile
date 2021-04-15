@@ -1,30 +1,63 @@
 <template>
-  <div id="app">
-    <div class="banner-background">
-    </div>
-    <el-row type="flex" justify="center">
-      <el-col span="16" style="margin-top: 5%">
-        <Regex2NFA/>
-      </el-col>
-    </el-row>
-  </div>
+  <v-app>
+    <v-navigation-drawer app v-model="drawer">
+      <v-list
+          nav>
+        <v-list-item
+            v-for="item in drawerItems"
+            :key="item.title"
+            link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+      <v-app-bar
+          app
+          color="white"
+          light>
+        <v-app-bar-nav-icon @click="drawer = !drawer"/>
+        <div class="d-flex align-center">
+          <v-toolbar-title>编译原理可视化平台</v-toolbar-title>
+        </div>
+
+        <v-spacer></v-spacer>
+
+        <v-btn
+            href="#"
+            text>
+          <span class="mr-2">登录</span>
+          <v-icon>mdi-open-in-new</v-icon>
+        </v-btn>
+      </v-app-bar>
+
+
+    <v-main>
+      <DFA/>
+    </v-main>
+  </v-app>
 </template>
 
-<style scoped>
-.banner-background{
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #00adff, #8ad3ff);
-  position: fixed;
-}
-</style>
-
 <script>
-import Regex2NFA from "@/components/Regex2NFA"
+import DFA from './components/DFAMinimize'
 
 export default {
-  name: 'App',
-  components: {Regex2NFA}
-}
-</script>
+  name: 'Regex2NFA',
+  components: {
+    DFA,
+  },
 
+  data: () => ({
+    drawer: false,
+    drawerItems: [
+      {title: 'Home', icon: 'mdi-view-dashboard'},
+      {title: 'About', icon: 'mdi-forum'},
+    ],
+  }),
+};
+</script>

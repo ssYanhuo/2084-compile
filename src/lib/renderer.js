@@ -3,7 +3,7 @@
     physics: {
       enabled: true
     },
-    height: '360',
+    height: '480',
     layout: {
       randomSeed: 4 // 固定seed，确保相同数据每次绘制结果不变，选择4时缺省数据显示效果较好
     },

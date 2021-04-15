@@ -35,9 +35,7 @@
         </div>
         <p>源数据：</p>
         <el-card shadow="never">
-
           <div id="originGraph">
-
           </div>
         </el-card>
       </el-col>

@@ -6,6 +6,7 @@ import Qs from 'qs';
 import Vuetify from "vuetify";
 
 import 'element-ui/lib/theme-chalk/index.css';
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
@@ -16,5 +17,10 @@ Vue.use(ElementUI)
 Vue.use(Vuetify)
 
 new Vue({
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')
+
+export default new Vuetify({
+  theme: { dark: true },
+})

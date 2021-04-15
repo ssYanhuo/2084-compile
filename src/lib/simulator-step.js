@@ -1,111 +1,192 @@
-!function (t) {
-    var n = {};
+exports.run = function(nfa, str, onStep) {
+  const {state_map, transition_map} = nfa
+  let current_states = new Set()
+  let next_states = new Set()
 
-    function e(r) {
-        if (n[r]) return n[r].exports;
-        var o = n[r] = {i: r, l: !1, exports: {}};
-        return t[r].call(o.exports, o, o.exports, e), o.l = !0, o.exports
+  addState(current_states, state_map.get(nfa.start))
+
+  let ch, i = 0, len = str.length
+
+  callOnStep()
+
+  function callOnStep() {
+    const finished = i >= len || current_states.size === 0
+    onStep({
+      step: i,
+      char: str[i],
+      states: current_states,
+      result: finished ? getResult() : undefined
+    }, finished ? null : next)
+  }
+
+  function next() {
+    ch = str[i]
+    step(ch)
+    let tmp = current_states
+    current_states = next_states
+    next_states = tmp
+    i++
+    callOnStep()
+  }
+
+  function step(ch) {
+    next_states.clear()
+    current_states.forEach((state) => {
+      // input transition's from state only have 1 transition
+      if (state.transitions.length !== 1) return
+      let transition = transition_map.get(state.transitions[0])
+      if (transition.input === ch) {
+        addState(next_states, state_map.get(transition.to))
+      }
+    })
+  }
+
+  function addState(set, state) {
+    if (!state || set.has(state)) {
+      return
     }
 
-    e.m = t, e.c = n, e.d = function (t, n, r) {
-        e.o(t, n) || Object.defineProperty(t, n, {enumerable: !0, get: r})
-    }, e.r = function (t) {
-        "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(t, Symbol.toStringTag, {value: "Module"}), Object.defineProperty(t, "__esModule", {value: !0})
-    }, e.t = function (t, n) {
-        if (1 & n && (t = e(t)), 8 & n) return t;
-        if (4 & n && "object" == typeof t && t && t.__esModule) return t;
-        var r = Object.create(null);
-        if (e.r(r), Object.defineProperty(r, "default", {
-            enumerable: !0,
-            value: t
-        }), 2 & n && "string" != typeof t) for (var o in t) e.d(r, o, function (n) {
-            return t[n]
-        }.bind(null, o));
-        return r
-    }, e.n = function (t) {
-        var n = t && t.__esModule ? function () {
-            return t.default
-        } : function () {
-            return t
-        };
-        return e.d(n, "a", n), n
-    }, e.o = function (t, n) {
-        return Object.prototype.hasOwnProperty.call(t, n)
-    }, e.p = "", e(e.s = 7)
-}({
-    7: function (t, n) {
-        n.run = function (t, n, e) {
-            const {state_map: r, transition_map: o} = t;
-            let i = new Set, u = new Set;
-            p(i, r.get(t.start));
-            // eslint-disable-next-line no-unused-vars
-            let a, s = 0, f = n.length;
+    // epsilon transition
+    if (isEpsilonTransition(transition_map.get(state.transitions[0]))) {
+      addState(set, getTransitionToState(state.transitions[0]))
+      addState(set, getTransitionToState(state.transitions[1]))
+    } else {
+      set.add(state)
+    }
+  }
 
-            function c() {
-                e({step: s, current_states: i, next_states: u, next_char: n[s]}, s < f ? l : null)
-            }
+  function isEpsilonTransition(transition) {
+    if (!transition) return false
+    return !transition.input
+  }
 
-            function l() {
-                !function (t) {
-                    u.clear(), i.forEach(n => {
-                        if (1 !== n.transitions.length) return;
-                        let e = o.get(n.transitions[0]);
-                        e.input === t && p(u, r.get(e.to))
-                    })
-                }(a = n[s]);
-                let t = i;
-                i = u, u = t, s++, c()
-            }
+  function getTransitionToState(transition_id) {
+    if (transition_id === undefined) return null
+    return state_map.get(transition_map.get(transition_id).to)
+  }
 
-            function p(t, n) {
-                n && !t.has(n) && (!function (t) {
-                    return !!t && !t.input
-                }(o.get(n.transitions[0])) ? t.add(n) : (p(t, g(n.transitions[0])), p(t, g(n.transitions[1]))))
-            }
+  function getResult() {
+    // check if end state in current_states
+    for (let state of current_states) {
+      if (state.transitions.length === 0) return true
+    }
+    return false
+  }
+}
 
-            function g(t) {
-                return void 0 === t ? null : r.get(o.get(t).to)
-            }
+exports.runWithBacktrack = function(nfa, str, onStep) {
+  const {state_map, transition_map} = nfa
+  const transition_path = [] // [transition_id, ...]
 
-            c();
-            for (let t of i) if (0 === t.transitions.length) return !0;
-            return !1
-        }, n.runWithBacktrack = function (t, n) {
-            const {state_map: e, transition_map: r} = t, o = [];
-            let i = 0, u = e.get(t.start), a = r.get(u.transitions[0]);
-            const s = 1, f = -1, c = 0;
-            for (; ;) {
-                let t = l();
-                if (t === f) {
-                    if (p() === c) break
-                } else if (t === c) break
-            }
+  let char_index = 0
+  let current_state = state_map.get(nfa.start)
+  let next_transition = transition_map.get(current_state.transitions[0])
 
-            function l() {
-                return a ? a.input ? a.input === n[i] ? (i++, o.push(a), u = e.get(a.to), i === n.length ? c : (a = r.get(u.transitions[0]), s)) : f : (o.push(a), u = e.get(a.to), a = r.get(u.transitions[0]), s) : f
-            }
+  const NEXT = 1
+  const BACK = -1
+  const FINISH = 0
 
-            function p() {
-                if (!u) return c;
-                const t = u.transitions[1];
-                // eslint-disable-next-line no-cond-assign
-                return void 0 === t || t === a.id ? (a = o.pop()) ? (a.input && i--, u = e.get(a.from), p()) : (u = null, c) : (a = r.get(t), s)
-            }
+  let step = 0
 
-            const g = new Set;
-            !function t(n) {
-                if (!n) return;
-                if (g.has(n)) return;
-                g.add(n);
-                n.transitions.forEach(n => {
-                    let o = r.get(n);
-                    "" === o.input && t(e.get(o.to))
-                })
-            }(u);
-            let d = !1;
-            return g.forEach(t => {
-                0 === t.transitions.length && (d = !0)
-            }), d
+  callOnStep()
+
+  function callOnStep(finished) {
+    onStep({
+      step: step++,
+      char: str[char_index],
+      states: [current_state],
+      result: finished ? getResult() : undefined
+    }, finished ? null : next)
+  }
+
+  function next() {
+    let result = forward()
+    if (result === BACK) {
+      if (back() === FINISH) {
+        callOnStep(true)
+        return
+      }
+    } else if (result === FINISH) {
+      callOnStep(true)
+      return
+    }
+    callOnStep()
+  }
+
+  function forward() {
+    if (!next_transition) return BACK
+    // epsilon
+    if (!next_transition.input) {
+      transition_path.push(next_transition)
+      current_state = state_map.get(next_transition.to)
+      next_transition = transition_map.get(current_state.transitions[0])
+      return NEXT
+    }
+    if (next_transition.input === str[char_index]) {
+      char_index++
+      transition_path.push(next_transition)
+      current_state = state_map.get(next_transition.to)
+      if (char_index === str.length) {
+        return FINISH
+      } else {
+        next_transition = transition_map.get(current_state.transitions[0])
+        return NEXT
+      }
+    } else {
+      // not match
+      return BACK
+    }
+  }
+
+  function back() {
+    if (!current_state) return FINISH
+    const last_transition_id = current_state.transitions[1]
+    // already try all transitions
+    if (last_transition_id === undefined || last_transition_id === next_transition.id) {
+      // go back
+      next_transition = transition_path.pop()
+      if (!next_transition) {
+        current_state = null
+        return FINISH
+      }
+      // move back if has valid input char
+      if (next_transition.input) {
+        char_index--
+      }
+      current_state = state_map.get(next_transition.from)
+      return back()
+    }
+    next_transition = transition_map.get(last_transition_id)
+    return NEXT
+  }
+
+  function getResult() {
+    // check if current state is end state, or can go directly to end state only with epsilon transitions
+
+    const reachable_states = new Set()
+  
+    addState(current_state)
+
+    function addState(state) {
+      if (!state) return
+      if (reachable_states.has(state)) return
+      reachable_states.add(state)
+      state.transitions.forEach((id) => {
+        // only add epsilon transiton's to state
+        let transition = transition_map.get(id)
+        if (transition.input === '') {
+          addState(state_map.get(transition.to))
         }
+      })
     }
-});
+
+    let matched = false
+    reachable_states.forEach((state) => {
+      // end state
+      if (state.transitions.length === 0) {
+        matched = true
+      }
+    })
+    return matched
+  }
+}
