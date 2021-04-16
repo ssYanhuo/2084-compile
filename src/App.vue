@@ -2,9 +2,38 @@
   <v-app>
     <v-navigation-drawer app v-model="drawer">
       <v-list
-          nav>
+          nav
+          dense>
         <v-list-item
-            v-for="item in drawerItems"
+            link>
+          <v-list-item-icon>
+            <v-icon> mdi-home </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>主页</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-subheader>
+          词法分析
+        </v-subheader>
+        <v-list-item
+            v-for="item in drawerItems.lexical"
+            :key="item.title"
+            link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-subheader>
+          语法分析
+        </v-subheader>
+        <v-list-item
+            v-for="item in drawerItems.lexical"
             :key="item.title"
             link>
           <v-list-item-icon>
@@ -35,8 +64,6 @@
           <v-icon>mdi-open-in-new</v-icon>
         </v-btn>
       </v-app-bar>
-
-
     <v-main>
       <DFA/>
     </v-main>
@@ -44,7 +71,7 @@
 </template>
 
 <script>
-import DFA from './components/DFAMinimize'
+import DFA from './components/Follow'
 
 export default {
   name: 'Regex2NFA',
@@ -54,10 +81,13 @@ export default {
 
   data: () => ({
     drawer: false,
-    drawerItems: [
-      {title: 'Home', icon: 'mdi-view-dashboard'},
-      {title: 'About', icon: 'mdi-forum'},
-    ],
+    drawerItems: {
+      lexical: [
+        {title: '正则表达式转 NFA', icon: 'mdi-code-tags-check'},
+        {title: 'NFA 确定化', icon: 'mdi-code-tags-check'},
+        {title: 'DFA 最小化', icon: 'mdi-code-tags-check'},
+      ]
+    },
   }),
 };
 </script>
