@@ -12,7 +12,7 @@
                 cols="10"
                 md="12">
               <h1 class="text-h4 font-weight-bold mt-12 black--text text-md-h3">
-                计算 Follow 集合
+                预测分析法
               </h1>
             </v-col>
           </v-row>
@@ -27,34 +27,32 @@
               <v-col cols="12" md="4">
                 <div>
                   <p>源数据：</p>
-                  <v-card flat height="520">
-                    <v-textarea  outlined height="520" background-color="blue-grey darken-4" dark no-resize placeholder="输入规则"/>
-                    <div style="margin: 16px; position: absolute; bottom: 0; right: 0; text-align: center">
-                    <p>
-                      <v-tooltip left>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn :loading="isLoading" dark fab id="btn-run" :color="btnColor" style="margin: 0 8px"
-                                 v-bind="attrs" v-on="on" @click="submit" >
-                            <v-icon dark>{{ btnIcon }}</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>提交</span>
-                      </v-tooltip>
-                    </p>
-                    <p>
-                      <v-tooltip left>
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
-                                 v-bind="attrs" v-on="on">
-                            <v-icon dark>mdi-download</v-icon>
-                          </v-btn>
-                        </template>
-                        <span>保存数据到本地</span>
-                      </v-tooltip>
-                    </p>
-                  </div>
-                  </v-card>
+                  <v-textarea  outlined height="320" no-resize label="文法输入"/>
+                  <v-text-field outlined label="分析字符串"/>
                 </div>
+                <div style="text-align: center">
+                  <p>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn :loading="isLoading" dark fab id="btn-run" :color="btnColor" style="margin: 0 8px"
+                               v-bind="attrs" v-on="on" @click="submit" >
+                          <v-icon dark>{{ btnIcon }}</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>提交</span>
+                    </v-tooltip>
+                    <v-tooltip left>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
+                               v-bind="attrs" v-on="on">
+                          <v-icon dark>mdi-download</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>保存数据到本地</span>
+                    </v-tooltip>
+                  </p>
+                </div>
+
               </v-col>
               <v-col cols="12" md="8">
                 <p>结果：</p>
