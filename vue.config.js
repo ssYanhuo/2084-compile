@@ -15,6 +15,13 @@ module.exports = {
                     '^/api_DFA': ''
                 }
             },
+            '/api_Predict': {
+                target: 'http://13.70.38.82:8883/',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api_Predict': ''
+                }
+            },
         }
     },
 

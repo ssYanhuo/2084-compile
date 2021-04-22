@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <p>这是一个还没写好的主页，点左上角的按钮打开导航栏。</p>
+    <p>这是一个还没写好的主页，点击左上角的按钮打开导航栏。</p>
   </v-container>
 </template>
 

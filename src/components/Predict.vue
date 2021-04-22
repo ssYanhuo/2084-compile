@@ -27,12 +27,12 @@
               <v-col cols="12" md="4">
                 <div>
                   <p>源数据：</p>
-                  <v-textarea  outlined height="320" no-resize label="文法输入"/>
-                  <v-text-field outlined label="分析字符串"/>
+                  <v-textarea  outlined height="320" no-resize label="文法输入" v-model="grammar"/>
+                  <v-text-field outlined label="分析字符串" v-model="analyzeString"/>
                 </div>
                 <div style="text-align: center">
                   <p>
-                    <v-tooltip left>
+                    <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn :loading="isLoading" dark fab id="btn-run" :color="btnColor" style="margin: 0 8px"
                                v-bind="attrs" v-on="on" @click="submit" >
@@ -41,7 +41,7 @@
                       </template>
                       <span>提交</span>
                     </v-tooltip>
-                    <v-tooltip left>
+                    <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
                                v-bind="attrs" v-on="on">
@@ -52,11 +52,11 @@
                     </v-tooltip>
                   </p>
                 </div>
-
               </v-col>
               <v-col cols="12" md="8">
                 <p>结果：</p>
                 <v-card outlined height="520">
+                  <div> {{  result  }} </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
@@ -94,11 +94,38 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
+      grammar: '',
+      analyzeString: '',
+      showOverlay: true,
+      result: ''
     };
   },
   methods:{
-    submit() {}
-
+    submit() {
+      this.isLoading = true;
+      let data = {
+        Result: this.grammar.split('\n'),
+        grals: this.analyzeString
+      }
+      let that = this
+      that.$axios({
+        url: '/api_Predict/PredictiveAnalysis',
+        method: 'post',
+        data: data,
+        paramsSerializer: function (params) {
+          return that.$qs.stringify(params, { indices: false })
+        }
+      })
+          .then(function (result) {
+            console.log(result)
+            that.showOverlay = false
+            that.isLoading = false
+            that.result = result.data
+          })
+          .catch(function (err) {
+            alert(err)
+          })
+    }
   }
 }
 </script>

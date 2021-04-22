@@ -30,7 +30,7 @@ const routes = [
   {path: '/dfaMinimize', component: dfaMinimize, name: 'DFAMinimize'},
   {path: '/regex2NFA', component: regex2NFA, name: 'Regex2NFA'},
   {path: '/home', component: home, name: 'Home'},
-  {path: '*', component: home}
+  {path: '*', component: home, name: 'Default'}
 ]
 
 const router = new VueRouter({
