@@ -7,6 +7,7 @@ import Vuetify from "vuetify";
 
 import 'element-ui/lib/theme-chalk/index.css';
 import vuetify from './plugins/vuetify';
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
@@ -20,7 +21,3 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount('#app')
-
-export default new Vuetify({
-  theme: { dark: true },
-})

@@ -20,5 +20,16 @@ module.exports = {
 
     transpileDependencies: [
       'vuetify'
-    ]
+    ],
+
+    pwa: {
+        workboxOptions: {
+            skipWaiting: true,
+            clientsClaim: true,
+            importWorkboxFrom: 'local',
+            importsDirectory: 'js',
+            navigateFallback: '/',
+            navigateFallbackBlacklist: [/\/api\//]
+        }
+    }
 }
