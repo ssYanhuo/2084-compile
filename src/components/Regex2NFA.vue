@@ -124,6 +124,12 @@ export default {
     require('../lib/renderer.js')
     require('../lib/simulator.js')
   },
+  activated() {
+    window.regexData = this.$data
+    require('../lib/regexLib.js')
+    require('../lib/renderer.js')
+    require('../lib/simulator.js')
+  },
   methods: {
     togglePhysics(enabled){
       window.togglePhysics(enabled)

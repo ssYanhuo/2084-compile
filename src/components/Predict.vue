@@ -10,7 +10,7 @@
             <v-col
                 class="text-left"
                 cols="10"
-                md="12">
+                md="11">
               <h1 class="text-h4 font-weight-bold mt-12 black--text text-md-h3">
                 预测分析法
               </h1>
