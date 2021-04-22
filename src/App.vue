@@ -1,56 +1,54 @@
 <template>
   <v-app>
     <v-navigation-drawer app v-model="drawer">
-      <v-list
-          nav
-          dense>
-        <v-list-item
-            link
-            @click="$router.push('home')">
-          <v-list-item-icon>
-            <v-icon> mdi-home</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>主页</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-subheader>
-          词法分析
-        </v-subheader>
-        <v-list-item
-            v-for="item in drawerItems.lexical"
-            :key="item.title"
-            link
-            @click="$router.push(item.route)">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-        <v-subheader>
-          语法分析
-        </v-subheader>
-        <v-list-item
-            v-for="item in drawerItems.grammar"
-            :key="item.title"
-            link
-            @click="$router.push(item.route)">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+      <v-list nav dense>
+        <v-list-item-group color="primary">
+          <v-list-item
+              link
+              @click="$router.push('home')">
+            <v-list-item-icon>
+              <v-icon> mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>主页</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-subheader>
+            词法分析
+          </v-subheader>
+          <v-list-item
+              v-for="item in drawerItems.lexical"
+              :key="item.title"
+              link
+              @click="$router.push(item.route)">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-subheader>
+            语法分析
+          </v-subheader>
+          <v-list-item
+              v-for="item in drawerItems.grammar"
+              :key="item.title"
+              link
+              @click="$router.push(item.route)">
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-        app
-        color="white"
-        light>
+    <v-app-bar app elevate-on-scroll color="#1867C020" dark style="backdrop-filter: blur(10px)">
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
       <div class="d-flex align-center">
         <v-toolbar-title>编译原理可视化平台</v-toolbar-title>
@@ -66,9 +64,11 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <keep-alive>
-        <router-view/>
-      </keep-alive>
+        <keep-alive>
+
+          <router-view/>
+
+        </keep-alive>
     </v-main>
   </v-app>
 </template>
@@ -78,8 +78,7 @@
 
 export default {
   name: 'App',
-  components: {
-  },
+  components: {},
   data: () => ({
     drawer: false,
     drawerItems: {
@@ -96,11 +95,20 @@ export default {
       ],
     },
   }),
-  methods: {
-
-  },
+  methods: {},
   mounted() {
 
   }
 };
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+{
+  opacity: 0;
+}
+</style>

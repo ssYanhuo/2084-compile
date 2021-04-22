@@ -1,8 +1,7 @@
 <template>
   <div>
     <v-parallax src="../assets/module-bg-s.png" height="400">
-      <div
-          style="width: 100%; height: 100%; background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%);">
+      <div style="width: 100%; height: 100%; background-image: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.8) 100%);">
         <v-container>
           <v-row
               align="center"
