@@ -5,7 +5,7 @@
         <v-list-item-group color="primary">
           <v-list-item
               link
-              @click="$router.push('home')">
+              @click="routeTo('home')">
             <v-list-item-icon>
               <v-icon> mdi-home</v-icon>
             </v-list-item-icon>
@@ -20,7 +20,7 @@
               v-for="item in drawerItems.lexical"
               :key="item.title"
               link
-              @click="$router.push(item.route)">
+              @click="routeTo(item.route)">
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -35,7 +35,7 @@
               v-for="item in drawerItems.grammar"
               :key="item.title"
               link
-              @click="$router.push(item.route)">
+              @click="routeTo(item.route)">
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -48,10 +48,10 @@
 
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app elevate-on-scroll color="#1867C020" dark style="backdrop-filter: blur(10px)">
+    <v-app-bar app :elevate-on-scroll="appbarMode[getAppbarMode(route)]" :color="appbarColor[getAppbarMode(route)]" :dark="appbarMode[getAppbarMode(route)]" :style="appbarStyle[getAppbarMode(route)]">
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
       <div class="d-flex align-center">
-        <v-toolbar-title>编译原理可视化平台</v-toolbar-title>
+        <v-toolbar-title>易编 - 编译原理可视化平台</v-toolbar-title>
       </div>
 
       <v-spacer></v-spacer>
@@ -65,9 +65,7 @@
     </v-app-bar>
     <v-main>
         <keep-alive>
-
           <router-view/>
-
         </keep-alive>
     </v-main>
   </v-app>
@@ -88,16 +86,43 @@ export default {
         {title: 'DFA 最小化', icon: 'mdi-code-tags-check', route: 'dfaMinimize'},
       ],
       grammar: [
-        {title: '预测分析法', icon: 'mdi-code-tags-check', route: 'predict'},
+        {title: '计算 First 集合', icon: 'mdi-code-tags-check', route: 'calculateFirst'},
+        {title: '计算 Follow 集合', icon: 'mdi-code-tags-check', route: 'calculateFollow'},
         {title: '消除左递归', icon: 'mdi-code-tags-check'},
         {title: 'LL1 文法判断', icon: 'mdi-code-tags-check'},
         {title: '递归下降分析', icon: 'mdi-code-tags-check'},
+        {title: '预测分析法', icon: 'mdi-code-tags-check', route: 'predict'},
       ],
     },
+    appbarStyle: [
+      'backdrop-filter: blur(30px)',
+      ''
+    ],
+    appbarColor: [
+      '#1867C060',
+      'white'
+    ],
+    appbarMode: [
+        true,
+        false
+    ],
+    route: '',
   }),
-  methods: {},
+  methods: {
+    getAppbarMode: function (route){
+      if(route === 'home' || route === ' ' || !route || route.length === 0){
+        return 0;
+      }else {
+        return 1;
+      }
+    },
+    routeTo: function (route) {
+      this.route = route
+      this.$router.push(route)
+    }
+  },
   mounted() {
-
+    this.route = this.$route.path.substr(1)
   }
 };
 </script>

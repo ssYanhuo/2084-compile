@@ -40,7 +40,7 @@
                     <div id="result"/>
                   </div>
                   <div style="margin: 16px; position: absolute; top: 0; right: 0">
-                    <v-checkbox dense id="btn-back-track" label="回溯" :disabled="inputDisabled" v-model="isBackTrack"/>
+<!--                    <v-checkbox dense id="btn-back-track" label="回溯" :disabled="inputDisabled" v-model="isBackTrack"/>-->
                     <v-checkbox dense id="checkbox-physics" v-model="physicsEnabled" label="自动布局" @click="togglePhysics(physicsEnabled)"/>
                   </div>
                   <div style="margin: 16px; position: absolute; bottom: 0; right: 0; text-align: center">

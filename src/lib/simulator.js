@@ -10,7 +10,8 @@
   let running = false
   let nextStep = null
   let currentNfa = null
-  let withBacktrack = false
+  // eslint-disable-next-line no-unused-vars
+  let withBacktrack = true
   let regexData = window.regexData
 
 
@@ -53,7 +54,8 @@
       nextStep()
     } else {
       running = true
-      ;(withBacktrack ? run_simulator_backtrack : run_simulator)(currentNfa, el_text.value, (state, next) => {
+      // eslint-disable-next-line no-constant-condition
+      ;(true ? run_simulator_backtrack : run_simulator)(currentNfa, el_text.value, (state, next) => {
         if (next === null) {
           console.log(next)
           updateState(state, false)

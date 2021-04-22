@@ -18,8 +18,8 @@
         border: '#333333',
         background: '#f0f0f0',
         highlight: {
-          border: '#ff3333',
-          background: '#fff0f0'
+          border: '#ffd333',
+          background: '#ffd67d'
         }
       }
     },
@@ -48,11 +48,13 @@
       // start state
       if (nodes.length === 0) {
         node.color = Styles.start_state_color
+        node.label = 'Start'
       }
       if (state.transitions.length) {
         state.transitions.forEach(addEdge)
       } else { // end state
         node.color = Styles.end_state_color
+        node.label = 'End'
       }
       nodes.push(node)
     })
@@ -64,7 +66,7 @@
       edges.push({
         from,
         to,
-        label: isEpsilon ? 'ϵ' : input,
+        label: isEpsilon ? 'ε' : input,
         arrows: 'to',
         color: {color: 'gray'},
         font: isEpsilon ? {align: 'horizontal', size: 28} : {align: 'horizontal', size: 28, color: 'rgb(255,0,0)'}

@@ -11,7 +11,7 @@
                 cols="10"
                 md="11">
               <h1 class="text-h4 font-weight-bold mt-12 black--text text-md-h3">
-                预测分析法
+                计算 First 集合
               </h1>
             </v-col>
           </v-row>
@@ -26,8 +26,7 @@
               <v-col cols="12" md="4">
                 <div>
                   <p>源数据：</p>
-                  <v-textarea  outlined height="320" no-resize label="文法输入" v-model="grammar"/>
-                  <v-text-field outlined label="分析字符串" v-model="analyzeString"/>
+                  <v-textarea  outlined height="420" no-resize label="文法输入" v-model="grammar"/>
                 </div>
                 <div style="text-align: center">
                   <p>
@@ -55,16 +54,7 @@
               <v-col cols="12" md="8">
                 <p>结果：</p>
                 <v-card outlined height="520">
-                  <v-card outlined style="z-index: 1">
-                    <v-tabs
-                        background-color="white"
-                        v-model="tab">
-                      <v-tab>图形</v-tab>
-                      <v-tab>步骤表</v-tab>
-                    </v-tabs>
-                  </v-card>
-                  <div> {{  result  }}
-                  </div>
+                  <div> {{  result  }} </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
@@ -80,7 +70,7 @@
 
 <script>
 export default {
-  name: "Predict",
+  name: "CalculateFirst",
   computed: {
     cardPadding() {
       switch (this.$vuetify.breakpoint.name) {
@@ -117,7 +107,7 @@ export default {
       }
       let that = this
       that.$axios({
-        url: '/api_Predict/PredictiveAnalysis',
+        url: '/api_Predict/TempAPI',
         method: 'post',
         data: data,
         paramsSerializer: function (params) {
