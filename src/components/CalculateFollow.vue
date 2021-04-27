@@ -54,7 +54,23 @@
               <v-col cols="12" md="8">
                 <p>结果：</p>
                 <v-card outlined height="520">
-                  <div> {{  result  }} </div>
+                  <div style="padding: 16px" v-if="!showOverlay">
+<!--                    <v-container fluid>-->
+<!--                      <v-row>-->
+<!--                        <v-col cols="6">-->
+<!--                          <p>Follow 集合：</p>-->
+<!--                          <p v-for="(text, index) in followSet" :key="index"> {{ text.replaceAll('{', '{ \'').replaceAll('}', '\' }').replaceAll('、', '\', \'') }} </p>-->
+<!--                        </v-col>-->
+<!--                        <v-divider vertical/>-->
+<!--                        <v-col cols="6">-->
+<!--                          <p>计算过程：</p>-->
+<!--                          <v-treeview :items="followSteps"/>-->
+<!--                        </v-col>-->
+<!--                      </v-row>-->
+<!--                    </v-container>-->
+                    <p>Follow 集合：</p>
+                    <p v-for="(text, index) in followSet" :key="index"> {{ text.replaceAll('{', '{ \'').replaceAll('}', '\' }').replaceAll('、', '\', \'') }} </p>
+                  </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
@@ -95,19 +111,22 @@ export default {
       grammar: '',
       analyzeString: '',
       showOverlay: true,
-      result: ''
+      result: '',
+      followSet: [],
+      followSteps: []
     };
   },
   methods:{
     submit() {
       this.isLoading = true;
+
       let data = {
-        Result: this.grammar.split('\n'),
+        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replaceAll('\t', '').split('\n'),
         grals: this.analyzeString
       }
       let that = this
       that.$axios({
-        url: '/api_Predict/PredictiveAnalysis',
+        url: '/api_Predict/TempAPI',
         method: 'post',
         data: data,
         paramsSerializer: function (params) {
@@ -119,10 +138,33 @@ export default {
             that.showOverlay = false
             that.isLoading = false
             that.result = result.data
+            that.showResult(that.result.Followresult, that.result.LastFollow)
           })
           .catch(function (err) {
-            alert(err)
+            console.log(err)
+            that.isLoading = false
           })
+    },
+    showResult: function (setData, follow){
+      this.followSet = follow
+      let that = this
+      let i = 0
+      console.log(setData)
+      Object.getOwnPropertyNames(setData).forEach(function (sign){
+        if (sign === '__ob__'){return}
+        let s = {}
+        s.id = ++i
+        s.name = sign + ':'
+        s.children = []
+        Object.getOwnPropertyNames(setData[sign]).forEach(function (method){
+          if (method === '__ob__'){return}
+          let child = {}
+          child.id = ++i
+          child.name = method + ': ' + JSON.stringify(setData[sign][method])
+          s.children.push(child)
+        })
+        that.followSteps.push(s)
+      })
     }
   }
 }

@@ -5,7 +5,6 @@ import Qs from 'qs';
 import Vuetify from 'vuetify';
 import VueRouter from 'vue-router';
 
-import 'element-ui/lib/theme-chalk/index.css';
 import vuetify from './plugins/vuetify';
 import './registerServiceWorker'
 import predict from "@/components/Predict";
@@ -15,6 +14,7 @@ import regex2NFA from "@/components/Regex2NFA";
 import home from "@/components/Home"
 import CalculateFirst from "@/components/CalculateFirst";
 import CalculateFollow from "@/components/CalculateFollow";
+import LL1 from "@/components/LL1";
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
@@ -31,6 +31,7 @@ const routes = [
   {path: '/regex2NFA', component: regex2NFA, name: 'Regex2NFA'},
   {path: '/calculateFirst', component: CalculateFirst, name: 'calculateFirst'},
   {path: '/calculateFollow', component: CalculateFollow, name: 'calculateFollow'},
+  {path: '/ll1', component: LL1, name: "LL1"},
   {path: '/home', component: home, name: 'Home'},
   {path: '*', component: home, name: 'Default'}
 ]

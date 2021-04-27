@@ -5,7 +5,7 @@
         <v-list-item-group color="primary">
           <v-list-item
               link
-              @click="routeTo('home')">
+              @click="routeTo('home'); drawer = false">
             <v-list-item-icon>
               <v-icon> mdi-home</v-icon>
             </v-list-item-icon>
@@ -81,17 +81,17 @@ export default {
     drawer: false,
     drawerItems: {
       lexical: [
-        {title: '正则表达式转 NFA', icon: 'mdi-code-tags-check', route: 'regex2NFA'},
-        {title: 'NFA 确定化', icon: 'mdi-code-tags-check', route: 'nfa2DFA'},
-        {title: 'DFA 最小化', icon: 'mdi-code-tags-check', route: 'dfaMinimize'},
+        {title: '正则表达式转 NFA', icon: 'mdi-regex', route: 'regex2NFA'},
+        {title: 'NFA 确定化', icon: 'mdi-check', route: 'nfa2DFA'},
+        {title: 'DFA 最小化', icon: 'mdi-minus', route: 'dfaMinimize'},
       ],
       grammar: [
-        {title: '计算 First 集合', icon: 'mdi-code-tags-check', route: 'calculateFirst'},
-        {title: '计算 Follow 集合', icon: 'mdi-code-tags-check', route: 'calculateFollow'},
-        {title: '消除左递归', icon: 'mdi-code-tags-check'},
-        {title: 'LL1 文法判断', icon: 'mdi-code-tags-check'},
-        {title: '递归下降分析', icon: 'mdi-code-tags-check'},
-        {title: '预测分析法', icon: 'mdi-code-tags-check', route: 'predict'},
+        {title: '计算 First 集合', icon: 'mdi-numeric-1-circle', route: 'calculateFirst'},
+        {title: '计算 Follow 集合', icon: 'mdi-arrow-right-circle', route: 'calculateFollow'},
+        {title: '消除左递归', icon: 'mdi-backburger'},
+        {title: 'LL1 文法判断', icon: 'mdi-code-tags-check', route: 'll1'},
+        {title: '递归下降分析', icon: 'mdi-arrow-down-circle'},
+        {title: '预测分析法', icon: 'mdi-google-analytics', route: 'predict'},
       ],
     },
     appbarStyle: [

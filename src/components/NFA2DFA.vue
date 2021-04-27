@@ -69,6 +69,9 @@
                         background-color="white"
                         v-model="tab">
                       <v-tab>图形</v-tab>
+                      <v-tooltip>
+
+                      </v-tooltip>
                       <v-tab>步骤表</v-tab>
                     </v-tabs>
                   </v-card>
@@ -501,6 +504,9 @@ export default {
       height: "520",
       interaction: {
         multiselect: false
+      },
+      nodes:{
+        borderWidth: 4,
       },
       physics: {
         enabled: true

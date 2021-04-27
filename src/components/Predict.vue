@@ -59,12 +59,55 @@
                     <v-tabs
                         background-color="white"
                         v-model="tab">
-                      <v-tab>图形</v-tab>
-                      <v-tab>步骤表</v-tab>
+                      <v-tab>分步演示</v-tab>
+                      <v-tab>预测分析表</v-tab>
                     </v-tabs>
                   </v-card>
-                  <div> {{  result  }}
-                  </div>
+                  <v-tabs-items v-model="tab">
+                    <v-tab-item>
+                      <div style="height: 480px">
+                        <v-container fluid>
+                          <v-row>
+                            <v-col cols="2">
+                              <v-btn @click="i++">+1</v-btn>
+                              <div>
+                                <transition-group name="list" tag="ul" mode="out-in">
+                                  <li style="list-style: none" class="list-item" v-for="item in stepStack[i]" :key="item">
+                                    <v-btn>{{ item }}</v-btn>
+                                  </li>
+                                </transition-group>
+                              </div>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </div>
+                    </v-tab-item>
+                    <v-tab-item>
+                      <v-simple-table>
+                        <template v-slot:default>
+                          <thead>
+                          <tr>
+                            <th
+                                class="text-center text-body-1 font-weight-bold"
+                                v-for="(tableCol, index) in tableCols"
+                                :key="index"
+                                :prop="tableCol">
+                              {{ tableCol }}
+                            </th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr v-for="(data, index) in tableData" :key="index" class="text-center">
+                            <td v-for="(v, k) in data"
+                                :key="k">
+                              {{ v }}
+                            </td>
+                          </tr>
+                          </tbody>
+                        </template>
+                      </v-simple-table>
+                    </v-tab-item>
+                  </v-tabs-items>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
@@ -105,19 +148,28 @@ export default {
       grammar: '',
       analyzeString: '',
       showOverlay: true,
-      result: ''
+      result: '',
+      tab: '',
+      tableCols: [],
+      tableData: [],
+      stepStack: [],
+      stepString: [],
+      stepNote: [],
+      stepPage: 0,
+      pageCount: 0,
+      i: 0
     };
   },
   methods:{
     submit() {
       this.isLoading = true;
       let data = {
-        Result: this.grammar.split('\n'),
+        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replaceAll('\t', '').split('\n'),
         grals: this.analyzeString
       }
       let that = this
       that.$axios({
-        url: '/api_Predict/PredictiveAnalysis',
+        url: '/api_Predict/TempAPI',
         method: 'post',
         data: data,
         paramsSerializer: function (params) {
@@ -129,11 +181,40 @@ export default {
             that.showOverlay = false
             that.isLoading = false
             that.result = result.data
+            that.showTable(that.result.FORMresult)
+            that.showStep(that.result.AnalyProcess)
           })
           .catch(function (err) {
-            alert(err)
+            console.log(err)
             that.isLoading = false
           })
+    },
+    showTable(data){
+      console.log(data)
+      data[0][0] = "非终结符\\终结符"
+      this.tableCols = data[0]
+      let that = this
+      data.forEach(function (e, index) {
+        if(index){
+          that.tableData.push(e)
+        }
+      })
+    },
+    showStep(data){
+      let that = this
+      that.i = 0
+      that.tableCols = []
+      that.tableData = []
+      that.stepStack = []
+      that.stepString = []
+      that.stepNote = []
+      that.stepPage = 0
+      that.pageCount = 0
+      data.forEach(function (step) {
+        that.stepStack.push(step[0].split('\n'))
+        that.stepString.push(step[1])
+        that.stepNote.push(step[2])
+      })
     }
   }
 }
@@ -146,5 +227,22 @@ export default {
 
 /deep/ .v-input--selection-controls {
   margin-top: 0 !important;
+}
+
+/deep/ th {
+  border: thin solid rgba(0, 0, 0, 0.06);
+}
+/deep/ td {
+  border: thin solid rgba(0, 0, 0, 0.06);
+}
+.list-item {
+  transition: all 0.5s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-leave-active {
+  position: absolute;
 }
 </style>
