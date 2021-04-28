@@ -55,59 +55,61 @@
               <v-col cols="12" md="8">
                 <p>结果：</p>
                 <v-card outlined height="520">
-                  <v-card outlined style="z-index: 1">
-                    <v-tabs
-                        background-color="white"
-                        v-model="tab">
-                      <v-tab>分步演示</v-tab>
-                      <v-tab>预测分析表</v-tab>
-                    </v-tabs>
-                  </v-card>
-                  <v-tabs-items v-model="tab">
-                    <v-tab-item>
-                      <div style="height: 480px">
-                        <v-container fluid>
+                  <div style="height: 100%">
+                    <v-container fluid>
+                      <v-row>
+                        <v-col cols="2">
+                          <v-btn @click="i++">+1</v-btn>
+                          <div style="height: 400px">
+                            <transition-group style="bottom: 0; position: absolute" name="stack" tag="ul">
+                              <li style="list-style: none" class="stack-item my-2" v-for="item in stepStack[i]" :key="item">
+                                <v-btn autocapitalize="off" color="primary" outlined>{{ item }}</v-btn>
+                              </li>
+                            </transition-group>
+                          </div>
+                        </v-col>
+                        <v-col cols="10">
                           <v-row>
-                            <v-col cols="2">
-                              <v-btn @click="i++">+1</v-btn>
+                            <v-col cols="12">
                               <div>
-                                <transition-group name="list" tag="ul" mode="out-in">
-                                  <li style="list-style: none" class="list-item" v-for="item in stepStack[i]" :key="item">
-                                    <v-btn>{{ item }}</v-btn>
-                                  </li>
+                                <transition-group style="right: 0" name="string" tag="div" dir="rtl">
+                                  <v-btn outlined color="primary" class="string-item mx-2" v-for="item in stepString[i]" :key="item">{{ item }}</v-btn>
                                 </transition-group>
                               </div>
                             </v-col>
                           </v-row>
-                        </v-container>
-                      </div>
-                    </v-tab-item>
-                    <v-tab-item>
-                      <v-simple-table>
-                        <template v-slot:default>
-                          <thead>
-                          <tr>
-                            <th
-                                class="text-center text-body-1 font-weight-bold"
-                                v-for="(tableCol, index) in tableCols"
-                                :key="index"
-                                :prop="tableCol">
-                              {{ tableCol }}
-                            </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr v-for="(data, index) in tableData" :key="index" class="text-center">
-                            <td v-for="(v, k) in data"
-                                :key="k">
-                              {{ v }}
-                            </td>
-                          </tr>
-                          </tbody>
-                        </template>
-                      </v-simple-table>
-                    </v-tab-item>
-                  </v-tabs-items>
+                          <v-row>
+                            <v-col cols="12">
+                              <p>{{ stepNote[i] }}</p>
+                              <v-simple-table>
+                                <template v-slot:default>
+                                  <thead>
+                                  <tr>
+                                    <th
+                                        class="text-center text-body-1 font-weight-bold"
+                                        v-for="(tableCol, index) in tableCols"
+                                        :key="index"
+                                        :prop="tableCol">
+                                      {{ tableCol }}
+                                    </th>
+                                  </tr>
+                                  </thead>
+                                  <tbody>
+                                  <tr v-for="(data, index) in tableData" :key="index" class="text-center">
+                                    <td v-for="(v, k) in data"
+                                        :key="k">
+                                      {{ v }}
+                                    </td>
+                                  </tr>
+                                  </tbody>
+                                </template>
+                              </v-simple-table>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
@@ -190,8 +192,10 @@ export default {
           })
     },
     showTable(data){
-      console.log(data)
-      data[0][0] = "非终结符\\终结符"
+      this.tableCols = []
+      this.tableData = []
+      // data[0][0] = "非终结符\\终结符"
+      data[0][0] = ''
       this.tableCols = data[0]
       let that = this
       data.forEach(function (e, index) {
@@ -203,16 +207,14 @@ export default {
     showStep(data){
       let that = this
       that.i = 0
-      that.tableCols = []
-      that.tableData = []
       that.stepStack = []
       that.stepString = []
       that.stepNote = []
       that.stepPage = 0
       that.pageCount = 0
       data.forEach(function (step) {
-        that.stepStack.push(step[0].split('\n'))
-        that.stepString.push(step[1])
+        that.stepStack.push(step[0].split('\n').reverse())
+        that.stepString.push(step[1].split('').reverse())
         that.stepNote.push(step[2])
       })
     }
@@ -235,14 +237,32 @@ export default {
 /deep/ td {
   border: thin solid rgba(0, 0, 0, 0.06);
 }
-.list-item {
+.stack-item {
   transition: all 0.5s;
 }
-.list-enter, .list-leave-to {
+.stack-enter {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.stack-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
-.list-leave-active {
+.stack-leave-active {
+  position: absolute;
+}
+.string-item {
+  transition: all 0.5s;
+}
+.string-enter {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.string-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.string-leave-active {
   position: absolute;
 }
 </style>
