@@ -88,7 +88,7 @@ export default {
       grammar: [
         {title: '计算 First 集合', icon: 'mdi-numeric-1-circle', route: 'calculateFirst'},
         {title: '计算 Follow 集合', icon: 'mdi-arrow-right-circle', route: 'calculateFollow'},
-        {title: '消除左递归', icon: 'mdi-backburger'},
+        {title: '消除左递归', icon: 'mdi-backburger', route: 'elr'},
         {title: 'LL1 文法判断', icon: 'mdi-code-tags-check', route: 'll1'},
         {title: '递归下降分析', icon: 'mdi-arrow-down-circle'},
         {title: '预测分析法', icon: 'mdi-google-analytics', route: 'predict'},

@@ -60,7 +60,7 @@
                       <v-row style="height: 100%">
                         <v-col cols="4">
                           <p>高亮展示: </p>
-                          <p :id="'result' + index" v-for="(sign, index) in input" :key="index">{{ sign }}</p>
+                          <p :id="'result' + index" v-for="(line, index) in input" :key="index">{{ line }}</p>
                         </v-col>
                         <v-divider vertical/>
                         <v-col cols="8">
@@ -86,14 +86,16 @@
                                   </v-row>
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
-                                  <v-fade-transition>
                                     <v-row>
-                                      <v-col cols="7">{{ panelContents[index].text }}<span style="opacity: 0.5" class="text--secondary">{{ panelContents[index].at }}</span></v-col>
+                                      <v-col cols="7">{{ panelContents[index].text }}<span style="opacity: 0.5"
+                                                                                           class="text--secondary">{{
+                                          panelContents[index].at
+                                        }}</span></v-col>
                                       <v-spacer/>
-                                      <v-col cols="5" class="text--secondary">{{ "匹配到：" + panelContents[index].foundSigns }}</v-col>
+                                      <v-col cols="5" class="text--secondary">
+                                        {{ "匹配到：" + panelContents[index].foundSigns }}
+                                      </v-col>
                                     </v-row>
-                                  </v-fade-transition>
-
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
                             </v-expansion-panels>
