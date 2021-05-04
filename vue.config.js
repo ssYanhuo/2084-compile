@@ -9,7 +9,7 @@ module.exports = {
                 }
             },
             '/api_DFA': {
-                target: 'http://13.70.38.82:8083/',
+                target: 'http://13.70.38.82:8883/',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api_DFA': ''
@@ -38,5 +38,6 @@ module.exports = {
             navigateFallback: '/',
             navigateFallbackBlacklist: [/\/api\//]
         }
-    }
+    },
+    publicPath: './'
 }

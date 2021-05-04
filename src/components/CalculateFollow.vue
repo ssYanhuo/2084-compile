@@ -39,7 +39,7 @@
                       </template>
                       <span>提交</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
+                    <v-tooltip v-if="false" bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
                                v-bind="attrs" v-on="on">
@@ -55,21 +55,8 @@
                 <p>结果：</p>
                 <v-card outlined height="520">
                   <div style="padding: 16px" v-if="!showOverlay">
-<!--                    <v-container fluid>-->
-<!--                      <v-row>-->
-<!--                        <v-col cols="6">-->
-<!--                          <p>Follow 集合：</p>-->
-<!--                          <p v-for="(text, index) in followSet" :key="index"> {{ text.replaceAll('{', '{ \'').replaceAll('}', '\' }').replaceAll('、', '\', \'') }} </p>-->
-<!--                        </v-col>-->
-<!--                        <v-divider vertical/>-->
-<!--                        <v-col cols="6">-->
-<!--                          <p>计算过程：</p>-->
-<!--                          <v-treeview :items="followSteps"/>-->
-<!--                        </v-col>-->
-<!--                      </v-row>-->
-<!--                    </v-container>-->
                     <p>Follow 集合：</p>
-                    <p v-for="(text, index) in followSet" :key="index"> {{ text.replaceAll('{', '{ \'').replaceAll('}', '\' }').replaceAll('、', '\', \'') }} </p>
+                    <p v-for="(text, index) in followSet" :key="index"> {{ text }} </p>
                   </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
@@ -108,7 +95,11 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
-      grammar: '',
+      grammar: 'E->T E\'\n' +
+          'E\'->+ T E\'|￥\n' +
+          'T->F T\'\n' +
+          'T\'->* F T\'|￥\n' +
+          'F->( E )|i',
       analyzeString: '',
       showOverlay: true,
       result: '',
@@ -119,9 +110,8 @@ export default {
   methods:{
     submit() {
       this.isLoading = true;
-
       let data = {
-        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replaceAll('\t', '').split('\n'),
+        Result: this.grammar.toString().replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replace(/(\t)/g, '').split('\n'),
         grals: this.analyzeString
       }
       let that = this

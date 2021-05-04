@@ -57,17 +57,22 @@
       <v-spacer></v-spacer>
 
       <v-btn
-          href="#"
           text>
         <span class="mr-2">登录</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main>
+    <v-main style="scroll-behavior: smooth">
         <keep-alive>
-          <router-view/>
+          <router-view style="scroll-behavior: smooth"/>
         </keep-alive>
     </v-main>
+    <div style="position: fixed; right: 16px; bottom: 16px; z-index: 9999">
+      <v-fade-transition>
+        <iframe v-show="helper" src="https://powerva.microsoft.com/webchat/bots/51f4f11d-e3b9-4522-952b-691fbe748667" frameborder="0" style="width: 100%; height: 400px;"/>
+      </v-fade-transition>
+      <v-btn style="float: right" fab color="primary" dark @click="helper = !helper"><v-icon dark>mdi-account-question</v-icon></v-btn>
+    </div>
   </v-app>
 </template>
 
@@ -89,8 +94,8 @@ export default {
         {title: '计算 First 集合', icon: 'mdi-numeric-1-circle', route: 'calculateFirst'},
         {title: '计算 Follow 集合', icon: 'mdi-arrow-right-circle', route: 'calculateFollow'},
         {title: '消除左递归', icon: 'mdi-backburger', route: 'elr'},
-        {title: 'LL1 文法判断', icon: 'mdi-code-tags-check', route: 'll1'},
-        {title: '递归下降分析', icon: 'mdi-arrow-down-circle'},
+        {title: 'LL(1) 文法判断', icon: 'mdi-code-tags-check', route: 'll1'},
+        {title: '递归下降分析', icon: 'mdi-arrow-down-circle', route: 'rda'},
         {title: '预测分析法', icon: 'mdi-google-analytics', route: 'predict'},
       ],
     },
@@ -107,6 +112,7 @@ export default {
         false
     ],
     route: '',
+    helper: false
   }),
   methods: {
     getAppbarMode: function (route){
@@ -119,10 +125,21 @@ export default {
     routeTo: function (route) {
       this.route = route
       this.$router.push(route)
+    },
+    toggleDrawer: function () {
+      this.drawer = !this.drawer
     }
   },
   mounted() {
     this.route = this.$route.path.substr(1)
+    console.log('  ______               _  _       \n' +
+        ' |  ____|             (_)| |      \n' +
+        ' | |__    __ _  _ __   _ | |  ___ \n' +
+        ' |  __|  / _` || \'_ \\ | || | / _ \\\n' +
+        ' | |____| (_| || |_) || || ||  __/\n' +
+        ' |______|\\__,_|| .__/ |_||_| \\___|\n' +
+        '               | |                \n' +
+        '               |_|                ')
   }
 };
 </script>

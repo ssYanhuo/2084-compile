@@ -80,7 +80,9 @@
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                   <v-row>
-                                    {{ panelContent[1] }}
+                                    <v-col cols="12">
+                                      <p v-for="(line, index) in panelContent[1]" :key="index">{{ line }}</p>
+                                    </v-col>
                                   </v-row>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
@@ -90,7 +92,9 @@
                                 </v-expansion-panel-header>
                                 <v-expansion-panel-content>
                                   <v-row>
-                                    {{ panelContent[2] }}
+                                    <v-col cols="12">
+                                      <p v-for="(line, index) in panelContent[2]" :key="index">{{ line }}</p>
+                                    </v-col>
                                   </v-row>
                                 </v-expansion-panel-content>
                               </v-expansion-panel>
@@ -142,7 +146,9 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
-      grammar: '',
+      grammar: 'S->Q c|c\n' +
+          'Q->R b|b\n' +
+          'R->S a|a',
       result: '',
       input: [],
       panel: 0,
@@ -150,23 +156,17 @@ export default {
       steps: [],
       stepPage: 0,
       pageCount: 0,
-      step: 0
+      step: 0,
+      finalInput: []
     }
   },
   methods: {
     submit() {
       this.isLoading = true;
-      let data = {
-        temp: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
-            .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
-            .replace(/(^\s+)|(\s+$)/g, "")
-            .replaceAll('\t', '')
-            .split('\n'),
-      }
-      data = this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
+      let data = this.grammar.toString().replace(/(\n[\s\t]*\r*\n)/g, '\n')
           .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
           .replace(/(^\s+)|(\s+$)/g, "")
-          .replaceAll('\t', '')
+          .replace(/(\t)/g, '')
           .split('\n')
       let that = this
       that.$axios({
@@ -190,14 +190,18 @@ export default {
           })
     },
     showResult: function (indirect, direct, result) {
+      this.result = ''
+      this.stepPage = 0
+      this.pageCount = 0
+      this.steps = []
       let that = this
       this.input = this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
           .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
           .replace(/(^\s+)|(\s+$)/g, "")
-          .replaceAll('\t', '')
-          .replaceAll(' ', '')
+          .replace(/(\t)/g, '')
+          .replace(/( )/g, '')
           .split('\n')
-      indirect.forEach(function (s) {
+      indirect.forEach(function (s, index) {
         that.pageCount++
         let step = {}
         step.panel = 0
@@ -209,6 +213,26 @@ export default {
             step.to.push(e)
           }
         })
+        if(index === 0){
+          step.input = that.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
+              .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
+              .replace(/(^\s+)|(\s+$)/g, "")
+              .replace(/(\t)/g, '')
+              .replace(/( )/g, '')
+              .replace(step.from, step.to.join('|'))
+              .split('\n')
+
+        }else{
+          step.input = that.finalInput.join('\n')
+              .replace(/(\n[\s\t]*\r*\n)/g, '\n')
+              .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
+              .replace(/(^\s+)|(\s+$)/g, "")
+              .replace(/(\t)/g, '')
+              .replace(/( )/g, '')
+              .replace(step.from, step.to.join('|'))
+              .split('\n')
+        }
+        that.finalInput = step.input
         that.steps.push(step)
       })
       direct.forEach(function (s) {
@@ -230,19 +254,53 @@ export default {
         panel: 2,
         stepString: result
       })
+      this.showStepAt(1)
+      this.stepPage = 1
       console.log(this.steps)
     },
     showStepAt(page){
       let step = this.steps[page - 1]
       if(step.panel === 0){
         this.panelContent[0] = "将 " + step.from + " 替换为 " + step.to.join('|')
+        this.input = step.input
         this.panel = 0
+        this.highlight(step.to.join('|'))
       } else if(step.panel === 1){
+        this.input = this.finalInput
         this.panelContent[1] = step.stepString
         this.panel = 1
+        this.highlight('')
       } else if(step.panel === 2){
         this.panelContent[2] = step.stepString
+        this.input = this.finalInput
         this.panel = 2
+        this.highlight('')
+      }
+    },
+    highlight: function (str){
+      if(str !== ''){
+        for(let i = 0; i < this.input.length; i++){
+          console.log(str)
+          let p = document.getElementById('result' + i)
+          p.innerHtml = ''
+          if(this.steps[this.stepPage - 1].panel === 0){
+            p.innerText = this.steps[this.stepPage - 1].input[i]
+          }else{
+            p.innerText = this.finalInput[i]
+          }
+          p.innerHTML = p.innerHTML.replace(str, '<strong class="primary white--text" >'+ " " + str + " " + '</strong>')
+        }
+      }else{
+        for(let i = 0; i < this.input.length; i++) {
+          console.log(str)
+          let p = document.getElementById('result' + i)
+          p.innerHtml = ''
+          if (this.steps[this.stepPage - 1].panel === 0) {
+            p.innerText = this.steps[this.stepPage - 1].input[i]
+          } else {
+            p.innerText = this.finalInput[i]
+          }
+        }
       }
     }
   }

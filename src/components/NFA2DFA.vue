@@ -44,7 +44,7 @@
                         <span>提交</span>
                       </v-tooltip>
                     </p>
-                    <p>
+                    <p v-if="false">
                       <v-tooltip left>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
@@ -480,24 +480,27 @@ export default {
     this.nodeName[0] = this.nodeName[1] = true
     this.originNodes = new this.$vis.DataSet([
       {id: 0, label: '0'},
-      {id: 1, label: '1'}
+      {id: 1, label: '1'},
+      {id: 2, label: '2'},
+      {id: 3, label: '3'},
+      {id: 4, label: '4'},
+      {id: 5, label: '5'},
+      {id: 6, label: '6'},
+      {id: 7, label: '7'}
     ])
     this.originEdges = new this.$vis.DataSet([
-      {
-        from: 0,
-        to: 1,
-        label: 'a',
-        arrows: {
-          to: {
-            enabled: true,
-            type: "arrow",
-            scaleFactor: 0.5
-          }
-        },
-        color: {
-          color: '#000000'
-        }
-      }
+      {from: 0, to: 1, label: 'e', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 1, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 1, to: 1, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 1, to: 2, label: 'e', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 2, to: 3, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 2, to: 4, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 3, to: 5, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 4, to: 5, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 5, to: 6, label: 'e', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 6, to: 6, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 6, to: 6, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 6, to: 7, label: 'e', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
     ])
     let container = document.getElementById("originGraph")
     let options = {

@@ -40,7 +40,7 @@
                       </template>
                       <span>提交</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
+                    <v-tooltip v-if="false" bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn v-bind="attrs" v-on="on" :download="blobName" :href="blobLink" color="cyan" dark
                                fab style="margin: 0 8px">
@@ -147,7 +147,11 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
-      grammar: '',
+      grammar: 'E->T E\'\n' +
+          'E\'->+ T E\'|￥\n' +
+          'T->F T\'\n' +
+          'T\'->* F T\'|￥\n' +
+          'F->( E )|i',
       analyzeString: '',
       showOverlay: true,
       result: '',
@@ -165,7 +169,7 @@ export default {
     submit() {
       this.isLoading = true;
       let data = {
-        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replaceAll('\t', '').split('\n'),
+        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replace(/(\t)/g, '').split('\n'),
         grals: this.analyzeString
       }
       let that = this
@@ -203,11 +207,11 @@ export default {
     },
     showResult(steps, result) {
       this.steps = []
-      this.input = this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
+      this.input = this.grammar.toString().replace(/(\n[\s\t]*\r*\n)/g, '\n')
           .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
           .replace(/(^\s+)|(\s+$)/g, "")
-          .replaceAll('\t', '')
-          .replaceAll(' ', '')
+          .replace(/(\t)/g, '')
+          .replace(/( )/g, '')
           .split('\n')
       this.signs = []
       this.panelContents = []
@@ -286,7 +290,6 @@ export default {
       if (at >= 0){
         let p = document.getElementById('result' + at)
         p.innerHTML = p.innerHTML.replace(str, '<strong class="primary white--text" >'+ " " + str + " " + '</strong>')
-        console.log(new RegExp('/(' + str + ')/', 'ig'))
       }
     },
   }

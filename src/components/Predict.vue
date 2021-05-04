@@ -40,7 +40,7 @@
                       </template>
                       <span>提交</span>
                     </v-tooltip>
-                    <v-tooltip bottom>
+                    <v-tooltip v-if="false" bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
                                v-bind="attrs" v-on="on">
@@ -55,14 +55,13 @@
               <v-col cols="12" md="8">
                 <p>结果：</p>
                 <v-card outlined height="520">
-                  <div style="height: 100%">
+                  <div v-if="!showOverlay" style="height: 100%">
                     <v-container fluid>
                       <v-row>
                         <v-col cols="2">
-                          <v-btn @click="i++">+1</v-btn>
-                          <div style="height: 400px">
-                            <transition-group style="bottom: 0; position: absolute" name="stack" tag="ul">
-                              <li style="list-style: none" class="stack-item my-2" v-for="item in stepStack[i]" :key="item">
+                          <div>
+                            <transition-group class="stack-box" style="height: 400px; position: absolute" name="stack" tag="ul">
+                              <li style="list-style: none" class="stack-item my-2" v-for="item in stepStack[stepPage - 1]" :key="item">
                                 <v-btn autocapitalize="off" color="primary" outlined>{{ item }}</v-btn>
                               </li>
                             </transition-group>
@@ -72,15 +71,15 @@
                           <v-row>
                             <v-col cols="12">
                               <div>
-                                <transition-group style="right: 0" name="string" tag="div" dir="rtl">
-                                  <v-btn outlined color="primary" class="string-item mx-2" v-for="item in stepString[i]" :key="item">{{ item }}</v-btn>
+                                <transition-group style="right: 0" name="string" tag="div" class="mt-8" dir="rtl">
+                                  <v-btn outlined color="primary" class="string-item mx-2" v-for="item in stepString[stepPage - 1]" :key="item">{{ item }}</v-btn>
                                 </transition-group>
                               </div>
                             </v-col>
                           </v-row>
                           <v-row>
                             <v-col cols="12">
-                              <p>{{ stepNote[i] }}</p>
+                              <p>{{ stepNote[stepPage - 1] }}</p>
                               <v-simple-table>
                                 <template v-slot:default>
                                   <thead>
@@ -109,6 +108,9 @@
                         </v-col>
                       </v-row>
                     </v-container>
+                    <div class="text-center" style="bottom: 8px;">
+                      <v-pagination total-visible="10" v-model="stepPage" :length="pageCount"/>
+                    </div>
                   </div>
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
@@ -147,8 +149,12 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
-      grammar: '',
-      analyzeString: '',
+      grammar: 'E->T E\'\n' +
+          'E\'->+ T E\'|￥\n' +
+          'T->F T\'\n' +
+          'T\'->* F T\'|￥\n' +
+          'F->( E )|i',
+      analyzeString: 'i+i*i',
       showOverlay: true,
       result: '',
       tab: '',
@@ -157,16 +163,19 @@ export default {
       stepStack: [],
       stepString: [],
       stepNote: [],
-      stepPage: 0,
+      stepPage: 1,
       pageCount: 0,
-      i: 0
     };
   },
   methods:{
     submit() {
       this.isLoading = true;
+      let grammar = this.grammar.toString().replace(/(\n[\s\t]*\r*\n)/g, '\n')
+          .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
+          .replace(/(^\s+)|(\s+$)/g,"")
+          .replace(/(\t)/g, '')
       let data = {
-        Result: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n').replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '').replace(/(^\s+)|(\s+$)/g,"").replaceAll('\t', '').split('\n'),
+        Result: grammar.split('\n'),
         grals: this.analyzeString
       }
       let that = this
@@ -180,11 +189,12 @@ export default {
       })
           .then(function (result) {
             console.log(result)
-            that.showOverlay = false
-            that.isLoading = false
             that.result = result.data
+            that.pageCount = that.result.AnalyProcess.length
             that.showTable(that.result.FORMresult)
             that.showStep(that.result.AnalyProcess)
+            that.showOverlay = false
+            that.isLoading = false
           })
           .catch(function (err) {
             console.log(err)
@@ -210,10 +220,9 @@ export default {
       that.stepStack = []
       that.stepString = []
       that.stepNote = []
-      that.stepPage = 0
-      that.pageCount = 0
+      that.stepPage = 1
       data.forEach(function (step) {
-        that.stepStack.push(step[0].split('\n').reverse())
+        that.stepStack.push(step[0].split('\n'))
         that.stepString.push(step[1].split('').reverse())
         that.stepNote.push(step[2])
       })
@@ -237,6 +246,9 @@ export default {
 /deep/ td {
   border: thin solid rgba(0, 0, 0, 0.06);
 }
+/deep/ .v-btn {
+  text-transform: none;
+}
 .stack-item {
   transition: all 0.5s;
 }
@@ -246,7 +258,7 @@ export default {
 }
 .stack-leave-to {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateX(30px);
 }
 .stack-leave-active {
   position: absolute;
@@ -264,5 +276,10 @@ export default {
 }
 .string-leave-active {
   position: absolute;
+}
+.stack-box {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column-reverse;
 }
 </style>

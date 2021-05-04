@@ -12,7 +12,7 @@
                 cols="10"
                 md="11">
               <h1 class="text-h4 font-weight-bold mt-12 black--text text-md-h3">
-                LL1 文法判断
+                LL(1) 文法判断
               </h1>
             </v-col>
           </v-row>
@@ -70,7 +70,7 @@
                           <v-card>
                             <v-card-title>Follow 集合</v-card-title>
                             <v-card-text>
-                              <p v-for="(line, index) in resultFolow" :key="index">{{ line }}</p>
+                              <p v-for="(line, index) in resultFollow" :key="index">{{ line }}</p>
                             </v-card-text>
                           </v-card>
                         </v-col>
@@ -123,29 +123,26 @@ export default {
       btnColor: 'primary',
       snackbar: false,
       snackbarMessage: '',
-      grammar: '',
+      grammar: 'E->T E\'\n' +
+          'E\'->+ T E\'|￥\n' +
+          'T->F T\'\n' +
+          'T\'->* F T\'|￥\n' +
+          'F->( E )|i',
       result: {},
       input: [],
       panel: 0,
       resultFirst: '',
-      resultFolow: '',
+      resultFollow: '',
       resultLL1: '',
     }
   },
   methods: {
     submit() {
       this.isLoading = true;
-      let data = {
-        temp: this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
-            .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
-            .replace(/(^\s+)|(\s+$)/g,"")
-            .replaceAll('\t', '')
-            .split('\n'),
-      }
-      data = this.grammar.replace(/(\n[\s\t]*\r*\n)/g, '\n')
+      let data = this.grammar.toString().replace(/(\n[\s\t]*\r*\n)/g, '\n')
           .replace(/^[\n\r\n\t]*|[\n\r\n\t]*$/g, '')
           .replace(/(^\s+)|(\s+$)/g,"")
-          .replaceAll('\t', '')
+          .replace(/(\t)/g, '')
           .split('\n')
           let that = this
       that.$axios({
@@ -170,7 +167,7 @@ export default {
     },
     showResult: function (first, follow, process, result) {
       this.resultFirst = first
-      this.resultFolow = follow
+      this.resultFollow = follow
       this.resultLL1 = process
       this.resultLL1.push(result)
     }

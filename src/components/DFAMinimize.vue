@@ -44,7 +44,7 @@
                         <span>提交</span>
                       </v-tooltip>
                     </p>
-                    <p>
+                    <p v-if="false">
                       <v-tooltip left>
                         <template v-slot:activator="{ on, attrs }">
                           <v-btn dark fab color="cyan" :href="blobLink" :download="blobName" style="margin: 0 8px"
@@ -64,47 +64,7 @@
                   <v-overlay absolute :value="showOverlay">
                     <p>等待输入……</p>
                   </v-overlay>
-                  <v-card outlined style="z-index: 1">
-                    <v-tabs
-                        background-color="white"
-                        v-model="tab">
-                      <v-tab>图形</v-tab>
-                      <v-tab>步骤表</v-tab>
-                    </v-tabs>
-                  </v-card>
-
-                  <v-tabs-items v-model="tab">
-                    <v-tab-item>
-                      <div id="graph"/>
-                    </v-tab-item>
-                    <v-tab-item>
-                      <v-simple-table>
-                        <template v-slot:default>
-                          <thead>
-                          <tr>
-                            <th
-                                class="text-center text-body-1 font-weight-bold"
-                                v-for="(tableCol, i) in tableCols"
-                                :key="i"
-                                :prop="tableCol.id">
-                              {{ tableCol.name }}
-                            </th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr v-for="(data, index) in tableData.data" :key="index" class="text-center">
-                            <td v-for="(v, k) in data"
-                                :key="k"
-                                @mouseenter="showStep(tableData.nodes[index])"
-                                @mouseleave="hideStep(tableData.nodes[index])">
-                              {{ v }}
-                            </td>
-                          </tr>
-                          </tbody>
-                        </template>
-                      </v-simple-table>
-                    </v-tab-item>
-                  </v-tabs-items>
+                  <div id="graph"/>
                 </v-card>
               </v-col>
             </v-row>
@@ -380,25 +340,23 @@ export default {
     }
     this.nodeName[0] = this.nodeName[1] = true
     this.originNodes = new this.$vis.DataSet([
-      {id: 0, label: 'A'},
-      {id: 1, label: 'B'}
+      {id: 0, label: 'A', typeOfNode: 'start', color: {background: '#97fc97', border: '#2ae82a', highlight: {background: '#97fc97', border: '#2ae82a'}}},
+      {id: 1, label: 'B'},
+      {id: 2, label: 'C'},
+      {id: 3, label: 'D'},
+      {id: 4, label: 'E', typeOfNode: 'end', color: {background: '#fc9797', border: '#e92b2b', highlight: {background: '#fc9797', border: '#e92b2b'}}},
     ])
     this.originEdges = new this.$vis.DataSet([
-      {
-        from: 0,
-        to: 1,
-        label: 'a',
-        arrows: {
-          to: {
-            enabled: true,
-            type: "arrow",
-            scaleFactor: 0.5
-          }
-        },
-        color: {
-          color: '#000000'
-        }
-      }
+      {from: 0, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 0, to: 2, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 1, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 1, to: 3, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 2, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 2, to: 2, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 3, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 3, to: 4, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 4, to: 1, label: 'a', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
+      {from: 4, to: 2, label: 'b', arrows: {to: {enabled: true, type: "arrow", scaleFactor: 0.5}}, color: {color: '#000000'}},
     ])
     let container = document.getElementById("originGraph")
     let options = {
