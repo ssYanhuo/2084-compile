@@ -22,6 +22,9 @@
       <v-row justify="center">
         <v-col cols="12">
           <v-card :style="{padding: cardPadding + 'px' }">
+            <v-snackbar v-model="snackbar" color="error lighten-1" elevation="4" multi-line bottom left class="mb-6 ml-4">
+              {{ snackbarMessage }}
+            </v-snackbar>
             <v-row justify="center">
               <v-col cols="12" md="4">
                 <div>
@@ -132,6 +135,8 @@ export default {
           })
           .catch(function (err) {
             console.log(err)
+            that.snackbar = true
+            that.snackbarMessage = err.toString() + '\n发生错误，请检查输入数据'
             that.isLoading = false
           })
     },

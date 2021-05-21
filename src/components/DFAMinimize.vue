@@ -305,6 +305,7 @@ export default {
         Sign_ls: this.DFA_methods,
         StateCount_ls: this.DFA_nodes.length
       }
+      that.isLoading = true
       that.$axios({
         url: '/api_DFA/Min_NFA_Input',
         params: params,
@@ -317,9 +318,13 @@ export default {
           .then(function (result) {
             that.drawGraph(that, result.data.StateListNum, result.data.AdjacencyRelation, result.data.StartStatic, result.data.EndStatic, that.DFA_methods)
             that.showOverlay = false
+            that.isLoading = false
           })
           .catch(function (err) {
-            alert(err)
+            console.log(err)
+            that.snackbar = true
+            that.snackbarMessage = err + '\n发生错误，请检查输入数据'
+            that.isLoading = false
           })
     },
     getNewNodeId: function () {

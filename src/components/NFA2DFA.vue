@@ -26,7 +26,7 @@
           <v-card :style="{padding: cardPadding + 'px' }">
             <v-row justify="center">
               <v-col cols="12" md="6">
-                <p>源数据：</p>
+                <p>源数据：<span class="text--secondary">（用"e"代替"ε"）</span> </p>
                 <v-card outlined height="520">
                   <v-snackbar v-model="snackbar" color="error lighten-1" elevation="4" multi-line bottom left class="mb-6 ml-4">
                     {{ snackbarMessage }}
@@ -232,7 +232,7 @@ export default {
           .catch(function (err) {
             that.isLoading = false
             console.log(err)
-            that.snackbarMessage = err.toString()
+            that.snackbarMessage = err.toString() + '\n发生错误，请检查输入数据'
             that.snackbar = true
           });
     },

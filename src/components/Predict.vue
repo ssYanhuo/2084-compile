@@ -22,10 +22,13 @@
       <v-row justify="center">
         <v-col cols="12">
           <v-card :style="{padding: cardPadding + 'px' }">
+            <v-snackbar v-model="snackbar" color="error lighten-1" elevation="4" multi-line bottom left class="mb-6 ml-4">
+              {{ snackbarMessage }}
+            </v-snackbar>
             <v-row justify="center">
               <v-col cols="12" md="4">
                 <div>
-                  <p>源数据：</p>
+                  <p>源数据：<span class="text--secondary">（用"￥"代替空串）</span></p>
                   <v-textarea  outlined height="320" no-resize label="文法输入" v-model="grammar"/>
                   <v-text-field outlined label="分析字符串" v-model="analyzeString"/>
                 </div>
@@ -198,6 +201,8 @@ export default {
           })
           .catch(function (err) {
             console.log(err)
+            that.snackbar = true
+            that.snackbarMessage = err.toString() + '\n发生错误，请检查输入数据'
             that.isLoading = false
           })
     },

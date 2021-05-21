@@ -1,4 +1,4 @@
-# 2084-compile
+# Eapile
 
 ## Project setup
 ```

@@ -51,7 +51,7 @@
     <v-app-bar app :elevate-on-scroll="appbarMode[getAppbarMode(route)]" :color="appbarColor[getAppbarMode(route)]" :dark="appbarMode[getAppbarMode(route)]" :style="appbarStyle[getAppbarMode(route)]">
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
       <div class="d-flex align-center">
-        <v-toolbar-title>易编 - 编译原理可视化平台</v-toolbar-title>
+        <v-toolbar-title>易编 - 编译原理可视化系统</v-toolbar-title>
       </div>
 
       <v-spacer></v-spacer>
@@ -67,11 +67,17 @@
           <router-view style="scroll-behavior: smooth"/>
         </keep-alive>
     </v-main>
-    <div style="position: fixed; right: 16px; bottom: 16px; z-index: 9999">
+    <div v-show="['xl', 'lg', 'md'].indexOf(this.$vuetify.breakpoint.name) !== -1" style="position: fixed; right: 16px; bottom: 16px; z-index: 9999">
       <v-fade-transition>
         <iframe v-show="helper" src="https://powerva.microsoft.com/webchat/bots/51f4f11d-e3b9-4522-952b-691fbe748667" frameborder="0" style="width: 100%; height: 400px;"/>
       </v-fade-transition>
       <v-btn style="float: right" fab color="primary" dark @click="helper = !helper"><v-icon dark>mdi-account-question</v-icon></v-btn>
+    </div>
+    <div v-show="['xl', 'lg', 'md'].indexOf(this.$vuetify.breakpoint.name) === -1" style="position: fixed; right: 8px; bottom: 16px; z-index: 9999">
+      <v-fade-transition>
+        <iframe v-show="helper" src="https://powerva.microsoft.com/webchat/bots/51f4f11d-e3b9-4522-952b-691fbe748667" frameborder="0" style="width: 100%; height: 400px;"/>
+      </v-fade-transition>
+      <v-btn style="float: right" x-small tile fab color="primary" dark @click="helper = !helper"><v-icon dark>mdi-account-question</v-icon></v-btn>
     </div>
   </v-app>
 </template>

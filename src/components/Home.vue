@@ -5,7 +5,7 @@
         <v-row v-show="['xl', 'lg', 'md'].indexOf(this.$vuetify.breakpoint.name) !== -1" style="padding: 100px 200px">
           <v-col cols="6" >
             <h1 class="text-h1 white--text">易编-Eapile</h1>
-            <h1 class="mt-8 text-h4 white--text">简易、轻量、多平台的编译原理可视化工具。</h1>
+            <h1 class="mt-8 text-h4 white--text">简易、轻量、多平台的编译原理可视化系统。</h1>
             <p><v-btn x-large class="mt-8" color="white" @click="scrollDown">Get Started!</v-btn></p>
           </v-col>
           <v-col cols="6">
@@ -18,7 +18,7 @@
           </v-col>
           <v-col cols="12" >
             <h1 class="text-h4 white--text text-center">易编-Eapile</h1>
-            <h1 class="mt-4 text-h6 white--text text-center">简易、轻量、多平台的编译原理可视化工具。</h1>
+            <h1 class="mt-4 text-h6 white--text text-center">简易、轻量、多平台的编译原理可视化系统。</h1>
             <p class="text-center"><v-btn large class="mt-4" color="white" @click="scrollDown">Get Started!</v-btn></p>
           </v-col>
         </v-row>
@@ -68,7 +68,7 @@
         </v-card-text>
         <v-divider/>
         <v-card-text class="white--text">
-          Copyright ©  {{ new Date().getFullYear() }} <strong>2084 Team</strong>
+          Copyright ©  {{ new Date().getFullYear() }} <strong>2084 Eapile Team</strong>
         </v-card-text>
       </v-card>
     </v-footer>
