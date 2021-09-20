@@ -18,6 +18,7 @@ import calculateFollow from "@/components/CalculateFollow";
 import ll1 from "@/components/LL1";
 import elr from "@/components/ELR";
 import rda from "@/components/RDA";
+import lr0 from "@/components/LR0";
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
@@ -39,6 +40,7 @@ const routes = [
   {path: '/home', component: home, name: 'Home'},
   {path: '/elr', component: elr, name: 'ELR'},
   {path: '/rda', component: rda, name: 'RDA'},
+  {path: '/lr0', component: lr0, name: 'LR0'},
   {path: '', component: home, name: 'Default'}
 ]
 

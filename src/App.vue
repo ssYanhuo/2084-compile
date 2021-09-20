@@ -57,7 +57,7 @@
       <v-spacer></v-spacer>
 
       <v-btn
-          text>
+          text @click="login">
         <span class="mr-2">登录</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
@@ -79,6 +79,24 @@
       </v-fade-transition>
       <v-btn style="float: right" x-small tile fab color="primary" dark @click="helper = !helper"><v-icon dark>mdi-account-question</v-icon></v-btn>
     </div>
+    <v-dialog
+        v-model="loginDialog"
+        width="480"
+        persistent
+        transition="scroll-y-transition">
+      <v-card>
+        <v-card-title class="headline">
+          登录
+        </v-card-title>
+        <v-card-text>
+          暂时仅限校内用户使用
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer/>
+          <v-btn color="primary" text @click="loginDialog = false">好的</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -103,8 +121,10 @@ export default {
         {title: 'LL(1) 文法判断', icon: 'mdi-code-tags-check', route: 'll1'},
         {title: '递归下降分析', icon: 'mdi-arrow-down-circle', route: 'rda'},
         {title: '预测分析法', icon: 'mdi-google-analytics', route: 'predict'},
+        {title: 'LR(0) 文法判断', icon: 'mdi-code-tags-check', route: 'lr0'}
       ],
     },
+    loginDialog: false,
     appbarStyle: [
       'backdrop-filter: blur(30px)',
       ''
@@ -134,6 +154,9 @@ export default {
     },
     toggleDrawer: function () {
       this.drawer = !this.drawer
+    },
+    login: function (){
+      this.loginDialog = true
     }
   },
   mounted() {

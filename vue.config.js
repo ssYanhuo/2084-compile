@@ -22,6 +22,20 @@ module.exports = {
                     '^/api_Predict': ''
                 }
             },
+            '/api_RDA': {
+                target: 'http://13.70.38.82:5000/',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api_RDA': ''
+                }
+            },
+            '/api_LR0': {
+                target: 'http://52.184.36.174:8883/',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api_LR0': ''
+                }
+            },
         }
     },
 

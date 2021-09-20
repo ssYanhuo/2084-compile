@@ -34,14 +34,15 @@
                   <div id="originGraph"/>
                   <div style="margin: 16px; position: absolute; bottom: 0; right: 0; text-align: center">
                     <p>
+                      <input style="display: none" type="file" id="file-input" @change="praiseFile"/>
                       <v-tooltip left>
                         <template v-slot:activator="{ on, attrs }">
-                          <v-btn :loading="isLoading" dark fab id="btn-run" :color="btnColor" style="margin: 0 8px"
-                                 v-bind="attrs" v-on="on" @click="submit" >
-                            <v-icon dark>{{ btnIcon }}</v-icon>
+                          <v-btn dark fab color="indigo" style="margin: 0 8px"
+                                 v-bind="attrs" v-on="on" @click="uploadFile">
+                            <v-icon dark>mdi-upload</v-icon>
                           </v-btn>
                         </template>
-                        <span>提交</span>
+                        <span>上传已保存的数据</span>
                       </v-tooltip>
                     </p>
                     <p v-if="false">
@@ -53,6 +54,17 @@
                           </v-btn>
                         </template>
                         <span>保存数据到本地</span>
+                      </v-tooltip>
+                    </p>
+                    <p>
+                      <v-tooltip left>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-btn :loading="isLoading" dark fab id="btn-run" :color="btnColor" style="margin: 0 8px"
+                                 v-bind="attrs" v-on="on" @click="submit" >
+                            <v-icon dark>{{ btnIcon }}</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>提交</span>
                       </v-tooltip>
                     </p>
                   </div>
@@ -116,6 +128,24 @@
         </v-col>
 
       </v-row>
+      <v-dialog
+          v-model="uploadDialog"
+          width="480"
+          persistent
+          transition="scroll-y-transition">
+        <v-card>
+          <v-card-title class="headline">
+            上传文件
+          </v-card-title>
+          <v-card-text>
+            暂时仅限校内用户使用
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer/>
+            <v-btn color="primary" text @click="uploadDialog = false">好的</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
 
   </div>
@@ -163,7 +193,8 @@ export default {
       network: null,
       networkData: null,
       originOptions: null,
-      originNetwork: null
+      originNetwork: null,
+      uploadDialog: false
     };
   },
   methods: {
@@ -235,6 +266,30 @@ export default {
             that.snackbarMessage = err.toString() + '\n发生错误，请检查输入数据'
             that.snackbar = true
           });
+    },
+    uploadFile(){
+      document.getElementById('file-input').click()
+    },
+    praiseFile(){
+      let that = this
+      try{
+        let file = document.getElementById('file-input').files[0]
+        if (file === null || file === undefined) return
+        let reader = new FileReader()
+        reader.readAsText(file)
+        reader.onload = function (){
+          let data = JSON.parse(this.result)
+          console.log(data)
+          that.uploadDialog = true
+          // new that.$vis.Network(document.getElementById("originGraph"), data, that.originOptions)
+          // that.originEdges = new this.$vis.DataSet(data.edges)
+          // that.originNodes = new this.$vis.DataSet(data.nodes)
+        }
+      }catch (err){
+        that.snackbarMessage = err.toString() + '\n发生错误，请检查输入数据'
+        that.snackbar = true
+        console.log(err)
+      }
     },
     getIdInStates(states, mState) {
       for (let i = 0; i < states.length; i++) {
